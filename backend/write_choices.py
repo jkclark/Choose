@@ -6,11 +6,27 @@ S3_BUCKET_NAME = "choose-choices"
 S3_CHOICES_FOLDER_PREFIX = "choices/"
 
 def lambda_handler(event, context):
+    # CORS headers to include in all responses
+    cors_headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+        "Access-Control-Allow-Methods": "POST,OPTIONS"
+    }
+
+    # Handle preflight OPTIONS request
+    if event["requestContext"]["http"]["method"] == "OPTIONS":
+        return {
+            "statusCode": 200,
+            "headers": cors_headers,
+            "body": json.dumps("OK")
+        }
+
     try:
         parsed_event = json.loads(event["body"])
     except (KeyError, json.JSONDecodeError) as e:
         return {
             "statusCode": 400,
+            "headers": cors_headers,
             "body": json.dumps(f"Invalid input: {e}")
         }
 
@@ -19,12 +35,14 @@ def lambda_handler(event, context):
     except KeyError:
         return {
             "statusCode": 400,
+            "headers": cors_headers,
             "body": json.dumps("Request does not contain choices")
         }
 
     if not isinstance(choices, list) or len(choices) == 0:
         return {
             "statusCode": 400,
+            "headers": cors_headers,
             "body": json.dumps("Choices must be a non-empty list")
         }
 
@@ -36,6 +54,7 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
+        "headers": cors_headers,
         "body": json.dumps("Choices saved successfully!")
     }
 
@@ -46,14 +65,7 @@ def convert_choices_from_objects_to_string(choices):
 
     We do this in order to reduce the size of the data we write to S3.
     """
-    try:
-        choices_as_strings = [f"{choice['game_id']},{choice['choice']}" for choice in choices]
-    except KeyError as e:
-        return {
-            "statusCode": 400,
-            "body": json.dumps(f"Missing required information in a given choice: {e}")
-        }
-
+    choices_as_strings = [f"{choice['game_id']},{choice['choice']}" for choice in choices]
     return "\n".join(choices_as_strings)
 
 def write_choices_to_s3(bucket, object_name, choices):
@@ -67,4 +79,3 @@ def write_choices_to_s3(bucket, object_name, choices):
         )
     except Exception as e:
         print("Error writing to S3:", e)
-
