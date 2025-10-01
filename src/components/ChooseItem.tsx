@@ -1,17 +1,20 @@
 import type React from "react";
 
-const ChooseItem: React.FC<ChooseItemProps> = ({ index }) => {
+const ChooseItem: React.FC<ChooseItemProps> = ({
+  index,
+  setChosenIndex,
+  className,
+}) => {
   function handleClick() {
-    alert(`You chose item ${index + 1}`);
+    setChosenIndex(index);
   }
 
   return (
     <div
-      // do not allow text to be selected
-      className="group flex aspect-[1/2] w-full cursor-pointer items-center justify-center rounded-md border border-black transition-colors select-none hover:bg-gray-100"
+      className={`group flex aspect-[1/2] w-full cursor-pointer items-center justify-center rounded-md border border-black transition-colors select-none hover:border-gray-100 ${className}`}
       onClick={handleClick}
     >
-      <span className="text-transparent transition-colors group-hover:text-black">
+      <span className="text-transparent transition-colors group-hover:text-white">
         Choose me
       </span>
     </div>
@@ -20,6 +23,8 @@ const ChooseItem: React.FC<ChooseItemProps> = ({ index }) => {
 
 interface ChooseItemProps {
   index: number;
+  setChosenIndex: (index: number) => void;
+  className?: string;
 }
 
 export default ChooseItem;
