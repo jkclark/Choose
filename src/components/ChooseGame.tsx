@@ -4,7 +4,7 @@ import ChooseItem from "./ChooseItem";
 const ChooseGame: React.FC<ChooseGameProps> = ({ numRows, numCols }) => {
   return (
     <div className="flex w-full flex-col items-center gap-4 p-4">
-      <div className="text-xl">Choose one</div>
+      <div className="text-xl select-none">Choose one</div>
       <div
         className="grid w-full max-w-[800px] gap-4"
         style={{
