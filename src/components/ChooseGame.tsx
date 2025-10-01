@@ -5,6 +5,12 @@ import ChooseItem from "./ChooseItem";
 const ChooseGame: React.FC<ChooseGameProps> = ({ numRows, numCols }) => {
   const [chosenIndex, setChosenIndex] = useState<number>(-1);
 
+  function setChosenIndexIfNotChosen(index: number) {
+    if (chosenIndex === -1) {
+      setChosenIndex(index);
+    }
+  }
+
   return (
     <div className="flex w-full flex-col items-center gap-4 p-4">
       <div className="text-xl select-none">Choose one</div>
@@ -19,7 +25,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({ numRows, numCols }) => {
           <ChooseItem
             key={index}
             index={index}
-            setChosenIndex={setChosenIndex}
+            setChosenIndex={setChosenIndexIfNotChosen}
             className={
               chosenIndex >= 0
                 ? index === chosenIndex
