@@ -18,12 +18,14 @@ function App() {
 
   return (
     <div className="flex h-dvh w-full items-center justify-center">
-      <ChooseGame
-        numRows={1}
-        numCols={4}
-        gameId={0}
-        choiceCounts={allChoiceCounts[0]}
-      />
+      {allChoiceCounts && allChoiceCounts[0] && (
+        <ChooseGame
+          numRows={1}
+          numCols={4}
+          gameId={0}
+          choiceCounts={allChoiceCounts[0]}
+        />
+      )}
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { submitChoices } from "../backend";
 import { type Choice } from "../choices";
+import { getChoiceLocally, saveChoiceLocally } from "../localStorage";
 import ChooseItem from "./ChooseItem";
 
 const ChooseGame: React.FC<ChooseGameProps> = ({
@@ -12,6 +13,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   choiceCounts,
 }) => {
   const [chosenIndex, setChosenIndex] = useState<number>(-1);
+  const [didLoadSavedChoice, setDidLoadSavedChoice] = useState(false);
 
   const userChose = chosenIndex !== -1;
 
@@ -24,30 +26,51 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   const totalChoices = getTotalChoices(mergedCounts);
   const choicePercents = getPercentagesOfChoices(mergedCounts);
 
+  const addUserChoiceToChoiceCounts = useCallback(
+    (index: number) => {
+      setChoiceCountsPlusUserChoice((prevCounts) => {
+        return {
+          ...prevCounts,
+          [index]: (choiceCounts[index] || 0) + 1,
+        };
+      });
+    },
+    [choiceCounts],
+  );
+
+  const setChosenIndexIfNotChosen = useCallback(
+    (index: number) => {
+      if (!userChose) {
+        setChosenIndex(index);
+
+        addUserChoiceToChoiceCounts(index);
+      }
+    },
+    [userChose, addUserChoiceToChoiceCounts],
+  );
+
+  // On mount, check for a saved choice
   useEffect(() => {
-    if (userChose) {
+    const storedChoice = getChoiceLocally(gameId);
+    if (storedChoice) {
+      setDidLoadSavedChoice(true);
+      setChosenIndexIfNotChosen(storedChoice.choice);
+    }
+  }, [gameId, setChosenIndexIfNotChosen]);
+
+  // When the user makes a choice, save it locally and submit it to the backend
+  useEffect(() => {
+    if (userChose && !didLoadSavedChoice) {
       const choice: Choice = {
         gameId: gameId,
         choice: chosenIndex,
       };
+
+      saveChoiceLocally(choice);
+
       submitChoices([choice]);
     }
-  }, [userChose, chosenIndex, gameId]);
-
-  function setChosenIndexIfNotChosen(index: number) {
-    if (!userChose) {
-      setChosenIndex(index);
-
-      // Update the counts to include the user's choice
-      setChoiceCountsPlusUserChoice((prevCounts) => {
-        const currentCount = choiceCounts[index] || 0;
-        return {
-          ...prevCounts,
-          [index]: currentCount + 1,
-        };
-      });
-    }
-  }
+  }, [userChose, chosenIndex, gameId, didLoadSavedChoice]);
 
   function getPercentagesOfChoices(choices: Record<number, number>) {
     if (!choices) {
