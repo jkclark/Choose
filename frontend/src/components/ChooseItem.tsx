@@ -21,14 +21,14 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
       ].join(" ")}
       onClick={handleClick}
     >
-      {!userChose && (
-        <span className="text-transparent transition-colors group-hover:text-white">
-          Choose me
-        </span>
-      )}
-      {userChose && (
-        <span className="text-lg text-white">{percentChosen.toFixed(1)}%</span>
-      )}
+      <span
+        className={[
+          "text-lg text-white transition-opacity duration-350 ease-in-out",
+          userChose ? "opacity-100" : "opacity-0",
+        ].join(" ")}
+      >
+        {percentChosen.toFixed(1)}%
+      </span>
     </div>
   );
 };
