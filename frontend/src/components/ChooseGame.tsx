@@ -14,6 +14,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
 
   const userChose = chosenIndex !== -1;
 
+  const totalChoices = getTotalChoices(choiceCounts);
   const choicePercents = getPercentagesOfChoices(choiceCounts);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
       return {};
     }
 
-    const total = Object.values(choices).reduce((sum, count) => sum + count, 0);
+    const total = getTotalChoices(choices);
     const percentages: Record<number, number> = {};
 
     for (const [choice, count] of Object.entries(choices)) {
@@ -45,6 +46,14 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
     }
 
     return percentages;
+  }
+
+  function getTotalChoices(choices: Record<number, number>) {
+    if (!choices) {
+      return 0;
+    }
+
+    return Object.values(choices).reduce((sum, count) => sum + count, 0);
   }
 
   return (
@@ -67,6 +76,14 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
             percentChosen={choicePercents[index] || 0}
           />
         ))}
+      </div>
+      <div
+        className={[
+          "text-lg transition-opacity duration-350 ease-in-out",
+          userChose ? "opacity-100" : "opacity-0",
+        ].join(" ")}
+      >
+        Total choices: {totalChoices}
       </div>
     </div>
   );
