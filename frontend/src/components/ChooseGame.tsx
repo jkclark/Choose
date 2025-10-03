@@ -73,8 +73,8 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   }
 
   return (
-    <div className="flex w-full max-w-[800px] flex-col items-center gap-4 p-4">
-      <div className="text-xl select-none">Choose one</div>
+    <div className="flex w-full max-w-[800px] flex-col items-center gap-4 p-4 select-none">
+      <div className="text-xl">Choose one</div>
       <div
         className="grid w-full max-w-[800px] gap-4"
         style={{
