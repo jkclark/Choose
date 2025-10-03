@@ -14,8 +14,14 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
 
   const userChose = chosenIndex !== -1;
 
-  const totalChoices = getTotalChoices(choiceCounts);
-  const choicePercents = getPercentagesOfChoices(choiceCounts);
+  // State to hold the original counts plus the user's choice
+  const [choiceCountsPlusUserChoice, setChoiceCountsPlusUserChoice] = useState<
+    Record<number, number>
+  >({});
+  const mergedCounts = { ...choiceCounts, ...choiceCountsPlusUserChoice };
+
+  const totalChoices = getTotalChoices(mergedCounts);
+  const choicePercents = getPercentagesOfChoices(mergedCounts);
 
   useEffect(() => {
     if (userChose) {
@@ -30,6 +36,16 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   function setChosenIndexIfNotChosen(index: number) {
     if (!userChose) {
       setChosenIndex(index);
+
+      // Update the counts to include the user's choice
+      setChoiceCountsPlusUserChoice((prevCounts) => {
+        const currentCount = choiceCounts[index] || 0;
+        const optimisticCount = prevCounts[index] || 0;
+        return {
+          ...prevCounts,
+          [index]: currentCount + optimisticCount + 1,
+        };
+      });
     }
   }
 

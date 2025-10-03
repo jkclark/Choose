@@ -35,7 +35,7 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
       {/* Percentage text */}
       <span
         className={[
-          "relative z-10 text-lg text-white transition-opacity duration-350 ease-in-out",
+          "relative z-10 text-2xl text-white transition-opacity duration-350 ease-in-out",
           userChose ? "opacity-100" : "opacity-0",
         ].join(" ")}
       >
