@@ -41,10 +41,9 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
       // Update the counts to include the user's choice
       setChoiceCountsPlusUserChoice((prevCounts) => {
         const currentCount = choiceCounts[index] || 0;
-        const optimisticCount = prevCounts[index] || 0;
         return {
           ...prevCounts,
-          [index]: currentCount + optimisticCount + 1,
+          [index]: currentCount + 1,
         };
       });
     }
