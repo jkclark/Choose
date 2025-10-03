@@ -1,7 +1,8 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 
-import { submitChoices, type Choice } from "../choices";
+import { submitChoices } from "../backend";
+import { type Choice } from "../choices";
 import ChooseItem from "./ChooseItem";
 
 const ChooseGame: React.FC<ChooseGameProps> = ({

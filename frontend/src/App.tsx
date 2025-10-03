@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { getAllChoices, type AllChoiceCounts } from "./choices";
+import { getAllChoices } from "./backend";
+import { type AllChoiceCounts } from "./choices";
 import ChooseGame from "./components/ChooseGame";
 
 function App() {
