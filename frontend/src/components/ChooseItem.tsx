@@ -15,16 +15,16 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
     <div
       className={[
         "group relative flex aspect-[1/2] w-full items-center justify-center overflow-hidden rounded-md",
-        "border border-black transition-colors select-none",
-        !userChose ? "cursor-pointer hover:border-gray-100" : "",
-        chosenIndex === index ? "border-gray-100" : "",
+        "border-secondary/50 border-2 transition-colors select-none",
+        !userChose ? "hover:border-secondary cursor-pointer" : "",
+        chosenIndex === index ? "!border-secondary" : "",
       ].join(" ")}
       onClick={handleClick}
     >
       {/* Animated background */}
       <div
         className={[
-          "absolute inset-x-0 bottom-0 bg-gray-600 transition-all duration-1000 ease-out",
+          "bg-secondary absolute inset-x-0 bottom-0 transition-all duration-1000 ease-out",
           userChose ? "opacity-70" : "opacity-0",
         ].join(" ")}
         style={{
@@ -35,7 +35,7 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
       {/* Percentage text */}
       <span
         className={[
-          "relative z-10 text-2xl text-white transition-opacity duration-350 ease-in-out",
+          "text-base-content relative z-10 text-2xl transition-opacity duration-350 ease-in-out",
           userChose ? "opacity-100" : "opacity-0",
         ].join(" ")}
       >

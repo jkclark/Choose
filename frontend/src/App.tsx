@@ -17,7 +17,7 @@ function App() {
   }, []);
 
   return (
-    <div className="flex h-dvh w-full items-center justify-center">
+    <div className="bg-base-100 text-base-content flex h-dvh w-full items-center justify-center">
       {allChoiceCounts && allChoiceCounts[0] && (
         <ChooseGame
           numRows={1}

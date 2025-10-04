@@ -122,7 +122,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
           userChose ? "opacity-100" : "opacity-0",
         ].join(" ")}
       >
-        Total choices: {totalChoices}
+        Total choices: <span className="text-secondary">{totalChoices}</span>
       </div>
     </div>
   );
