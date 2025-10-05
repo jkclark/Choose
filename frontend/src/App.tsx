@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import { getAllChoices } from "./backend";
 import { type AllChoiceCounts } from "./choices";
 import ChooseGame from "./components/ChooseGame";
+import { games } from "./games";
 
 function App() {
+  const [gameIndex, setGameIndex] = useState(0);
+
   const [allChoiceCounts, setAllChoiceCounts] = useState({} as AllChoiceCounts);
 
   // On mount, fetch all choices
@@ -16,16 +19,29 @@ function App() {
     fetchAllChoices();
   }, []);
 
+  function getChoiceCountsForGameIndex(index: number) {
+    return allChoiceCounts ? allChoiceCounts[index] || {} : {};
+  }
+
+  function goToNextGame() {
+    // Go next, or do nothing if we're at the last game
+    if (gameIndex < games.length - 1) {
+      setGameIndex((prev) => prev + 1);
+    }
+  }
+
   return (
-    <div className="bg-base-100 text-base-content flex h-dvh w-full items-center justify-center">
-      {allChoiceCounts && allChoiceCounts[0] && (
-        <ChooseGame
-          numRows={1}
-          numCols={4}
-          gameId={0}
-          choiceCounts={allChoiceCounts[0]}
-        />
-      )}
+    <div className="bg-base-100 text-base-content flex h-dvh w-full flex-col items-center justify-center">
+      <ChooseGame
+        key={gameIndex} // Force remount when gameIndex changes
+        numRows={games[gameIndex].rows}
+        numCols={games[gameIndex].cols}
+        gameId={games[gameIndex].id}
+        choiceCounts={getChoiceCountsForGameIndex(gameIndex)}
+      />
+      <div className="btn" onClick={goToNextGame}>
+        Next
+      </div>
     </div>
   );
 }
