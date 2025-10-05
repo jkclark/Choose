@@ -30,6 +30,13 @@ function App() {
     }
   }
 
+  function goToPrevGame() {
+    // Go previous, or do nothing if we're at the first game
+    if (gameIndex > 0) {
+      setGameIndex((prev) => prev - 1);
+    }
+  }
+
   return (
     <div className="bg-base-100 text-base-content flex h-dvh w-full flex-col items-center justify-center">
       <ChooseGame
@@ -39,8 +46,13 @@ function App() {
         gameId={games[gameIndex].id}
         choiceCounts={getChoiceCountsForGameIndex(gameIndex)}
       />
-      <div className="btn" onClick={goToNextGame}>
-        Next
+      <div className="flex w-full max-w-[800px] justify-between gap-2 sm:gap-3 md:gap-4">
+        <div className="btn" onClick={goToPrevGame}>
+          Previous
+        </div>
+        <div className="btn" onClick={goToNextGame}>
+          Next
+        </div>
       </div>
     </div>
   );
