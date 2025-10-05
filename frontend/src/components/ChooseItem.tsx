@@ -14,7 +14,8 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
   return (
     <div
       className={[
-        "group relative flex aspect-[1/2] w-full items-center justify-center overflow-hidden rounded-md",
+        "group relative flex aspect-[1/1.618] w-[80px] sm:w-[120px] md:w-[160px] lg:w-[200px] xl:w-[240px]",
+        "items-center justify-center overflow-hidden rounded-md",
         "border-secondary/50 border-2 transition-colors select-none",
         !userChose ? "hover:border-secondary cursor-pointer" : "",
         chosenIndex === index ? "!border-secondary" : "",

@@ -99,10 +99,11 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
     <div className="flex w-full max-w-[800px] flex-col items-center gap-4 p-4 select-none">
       <div className="text-xl">Choose one</div>
       <div
-        className="grid w-full max-w-[800px] gap-4"
+        className="grid justify-center gap-2 sm:gap-3 md:gap-4"
         style={{
           gridTemplateRows: `repeat(${numRows}, 1fr)`,
-          gridTemplateColumns: `repeat(${numCols}, 1fr)`,
+          gridTemplateColumns: `repeat(${numCols}, auto)`,
+          maxWidth: "min(100vw - 2rem, 800px)",
         }}
       >
         {Array.from({ length: numRows * numCols }).map((_, index) => (
