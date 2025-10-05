@@ -46,11 +46,11 @@ function App() {
         gameId={games[gameIndex].id}
         choiceCounts={getChoiceCountsForGameIndex(gameIndex)}
       />
-      <div className="flex w-full max-w-[800px] justify-between gap-2 sm:gap-3 md:gap-4">
-        <div className="btn" onClick={goToPrevGame}>
+      <div className="flex w-full max-w-[800px] justify-between gap-2 px-10 sm:gap-3 md:gap-4">
+        <div className="btn w-20" onClick={goToPrevGame}>
           Previous
         </div>
-        <div className="btn" onClick={goToNextGame}>
+        <div className="btn w-20" onClick={goToNextGame}>
           Next
         </div>
       </div>
