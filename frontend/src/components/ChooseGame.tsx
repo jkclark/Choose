@@ -26,6 +26,49 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   const totalChoices = getTotalChoices(mergedCounts);
   const choicePercents = getPercentagesOfChoices(mergedCounts);
 
+  // Calculate dynamic item size based on available space and grid dimensions
+  const calculateItemSize = useCallback(() => {
+    // Base container width (accounting for padding and gaps)
+    const maxContainerWidth = Math.min(window.innerWidth - 32, 800); // 2rem padding
+    const maxContainerHeight = window.innerHeight * 0.8 * 0.7; // 80dvh * 70% for items
+
+    // Account for gaps between items
+    const gapSize = numCols >= 3 ? 6 : 8; // Responsive gap
+    const totalGapWidth = (numCols - 1) * gapSize;
+    const totalGapHeight = (numRows - 1) * gapSize;
+
+    // Calculate available space per item
+    const availableWidth = (maxContainerWidth - totalGapWidth) / numCols;
+    const availableHeight = (maxContainerHeight - totalGapHeight) / numRows;
+
+    // Use golden ratio (1:1.618) for aspect ratio
+    const goldenRatio = 1.618;
+
+    // Calculate size based on width constraint
+    const widthBasedSize = availableWidth;
+
+    // Calculate size based on height constraint
+    const heightBasedSize = availableHeight / goldenRatio;
+
+    // Use the smaller of the two to ensure it fits
+    const finalSize = Math.min(widthBasedSize, heightBasedSize);
+
+    // Set minimum and maximum bounds
+    return Math.max(60, Math.min(240, finalSize));
+  }, [numRows, numCols]);
+
+  const [itemSize, setItemSize] = useState(() => calculateItemSize());
+
+  // Recalculate size on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setItemSize(calculateItemSize());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [calculateItemSize]);
+
   const addUserChoiceToChoiceCounts = useCallback(
     (index: number) => {
       setChoiceCountsPlusUserChoice((prevCounts) => {
@@ -99,10 +142,11 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
     <div className="flex h-[80dvh] w-full max-w-[800px] flex-col items-center justify-center gap-4 p-4 select-none">
       <div className="text-xl">Choose one</div>
       <div
-        className="grid justify-center gap-2 sm:gap-3 md:gap-4"
+        className="grid justify-center"
         style={{
           gridTemplateRows: `repeat(${numRows}, 1fr)`,
           gridTemplateColumns: `repeat(${numCols}, auto)`,
+          gap: `${numCols >= 3 ? 6 : 8}px`,
           maxWidth: "min(100vw - 2rem, 800px)",
         }}
       >
@@ -114,6 +158,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
             chosenIndex={chosenIndex}
             setChosenIndex={setChosenIndexIfNotChosen}
             percentChosen={choicePercents[index] || 0}
+            itemSize={itemSize}
           />
         ))}
       </div>

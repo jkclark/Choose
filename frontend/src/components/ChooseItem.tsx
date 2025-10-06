@@ -6,6 +6,7 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
   chosenIndex,
   setChosenIndex,
   percentChosen,
+  itemSize,
 }) => {
   function handleClick() {
     setChosenIndex(index);
@@ -14,12 +15,15 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
   return (
     <div
       className={[
-        "group relative flex aspect-[1/1.618] w-[80px] sm:w-[120px] md:w-[160px] lg:w-[200px] xl:w-[240px]",
-        "items-center justify-center overflow-hidden rounded-md",
+        "group relative flex items-center justify-center overflow-hidden rounded-md",
         "border-secondary/50 border-2 transition-colors select-none",
         !userChose ? "hover:border-secondary cursor-pointer" : "",
         chosenIndex === index ? "!border-secondary" : "",
       ].join(" ")}
+      style={{
+        width: `${itemSize}px`,
+        height: `${itemSize * 1.618}px`, // Golden ratio
+      }}
       onClick={handleClick}
     >
       {/* Animated background */}
@@ -52,6 +56,7 @@ interface ChooseItemProps {
   chosenIndex: number;
   setChosenIndex: (index: number) => void;
   percentChosen: number;
+  itemSize: number;
 }
 
 export default ChooseItem;
