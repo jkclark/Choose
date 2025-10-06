@@ -4,7 +4,6 @@ import { getAllChoices } from "./backend";
 import { type AllChoiceCounts } from "./choices";
 import ChooseGame from "./components/ChooseGame";
 import { games } from "./games";
-import { getChoiceLocally } from "./localStorage";
 
 function App() {
   const [gameIndex, setGameIndex] = useState(0);
@@ -12,9 +11,6 @@ function App() {
 
   // State to manage fade-in/fade-out animation
   const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const chosenChoice = getChoiceLocally(games[gameIndex].id);
-  const userChose = chosenChoice !== null;
 
   // On mount, fetch all choices
   useEffect(() => {
