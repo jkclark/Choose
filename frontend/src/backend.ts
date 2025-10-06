@@ -8,7 +8,11 @@ const API_BASE_URL = "https://4w1im8e5i2.execute-api.us-east-1.amazonaws.com";
 const AGGREGATE_FILE_URL =
   "https://choose-choices.s3.us-east-1.amazonaws.com/aggregated_choices.json";
 
-export async function submitChoices(choices: Choice[]) {
+export async function submitChoice(choice: Choice) {
+  await submitChoices([choice]);
+}
+
+async function submitChoices(choices: Choice[]) {
   // Rename gameId to game_id to comply with what the backend expects
   const transformedChoices = choices.map((choice) => ({
     game_id: choice.gameId,

@@ -1,7 +1,7 @@
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 
-import { submitChoices } from "../backend";
+import { submitChoice } from "../backend";
 import { type Choice } from "../choices";
 import { getChoiceLocally, saveChoiceLocally } from "../localStorage";
 import ChooseItem from "./ChooseItem";
@@ -68,7 +68,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
 
       saveChoiceLocally(choice);
 
-      submitChoices([choice]);
+      submitChoice(choice);
     }
   }, [userChose, chosenIndex, gameId, didLoadSavedChoice]);
 
