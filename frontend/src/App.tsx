@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 
 import { getAllChoices } from "./backend";
 import { type AllChoiceCounts } from "./choices";
+import AboutModal from "./components/AboutModal";
 import ChooseGame from "./components/ChooseGame";
 import { games } from "./games";
+
+import "./index.css";
 
 function App() {
   const [gameIndex, setGameIndex] = useState(0);
@@ -48,7 +51,7 @@ function App() {
   }
 
   return (
-    <div className="bg-base-100 text-base-content flex h-dvh w-full flex-col items-center justify-center">
+    <div className="bg-base-100 text-base-content flex h-dvh w-full flex-col items-center justify-center pb-6">
       <div
         className={`flex w-full justify-center transition-opacity duration-300 ease-in-out ${
           isTransitioning ? "opacity-0" : "opacity-100"
@@ -79,6 +82,8 @@ function App() {
           Next
         </button>
       </div>
+
+      <AboutModal />
     </div>
   );
 }

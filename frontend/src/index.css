@@ -2,3 +2,14 @@
 @plugin "daisyui" {
   themes: dracula --default;
 }
+
+// Prevents a DaisyUI bug where an invisible scrollbar is created
+// upon opening a modal.
+html {
+  scrollbar-gutter: stable;
+}
+:root:has(
+  :is(.modal-open, .modal:target, .modal-toggle:checked + .modal, .modal[open])
+) {
+  scrollbar-gutter: unset;
+}
