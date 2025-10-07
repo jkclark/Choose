@@ -175,6 +175,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
             percentChosen={choicePercents[index] || 0}
             itemSize={itemSize}
             sideways={sideways}
+            numCols={numCols}
           />
         ))}
       </div>

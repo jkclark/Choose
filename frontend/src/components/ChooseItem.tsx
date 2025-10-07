@@ -8,10 +8,19 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
   percentChosen,
   itemSize,
   sideways,
+  numCols,
 }) => {
   function handleClick() {
     setChosenIndex(index);
   }
+
+  // Calculate text size based on number of columns with responsive breakpoints
+  const getTextSizeClass = () => {
+    if (numCols === 1 || numCols === 2)
+      return "text-2xl sm:text-3xl lg:text-4xl";
+    if (numCols === 3 || numCols === 4) return "text-lg sm:text-xl lg:text-3xl";
+    return "text-sm sm:text-base lg:text-xl"; // 5+ columns
+  };
 
   return (
     <div
@@ -41,7 +50,8 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
       {/* Percentage text */}
       <span
         className={[
-          "text-base-content relative z-10 text-2xl transition-opacity duration-350 ease-in-out",
+          "text-base-content relative z-10 transition-opacity duration-350 ease-in-out",
+          getTextSizeClass(),
           userChose ? "opacity-100" : "opacity-0",
         ].join(" ")}
       >
@@ -59,6 +69,7 @@ interface ChooseItemProps {
   percentChosen: number;
   itemSize: number;
   sideways: boolean;
+  numCols: number;
 }
 
 export default ChooseItem;
