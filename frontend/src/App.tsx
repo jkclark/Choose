@@ -60,6 +60,7 @@ function App() {
           numCols={games[gameIndex].cols}
           gameId={games[gameIndex].id}
           choiceCounts={getChoiceCountsForGameIndex(gameIndex)}
+          sideways={games[gameIndex].sideways}
         />
       </div>
       <div className="flex w-full max-w-[800px] justify-between gap-2 px-10 sm:gap-3 md:gap-4">

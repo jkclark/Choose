@@ -11,6 +11,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   numRows,
   numCols,
   choiceCounts,
+  sideways,
 }) => {
   const [chosenIndex, setChosenIndex] = useState<number>(-1);
   const [didLoadSavedChoice, setDidLoadSavedChoice] = useState(false);
@@ -44,18 +45,32 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
     // Use golden ratio (1:1.618) for aspect ratio
     const goldenRatio = 1.618;
 
-    // Calculate size based on width constraint
-    const widthBasedSize = availableWidth;
+    let finalSize;
+    if (sideways) {
+      // For sideways, itemSize will be the HEIGHT, and width = height * goldenRatio
+      // Calculate size based on width constraint (itemSize * goldenRatio <= availableWidth)
+      const heightBasedOnWidth = availableWidth / goldenRatio;
 
-    // Calculate size based on height constraint
-    const heightBasedSize = availableHeight / goldenRatio;
+      // Calculate size based on height constraint (itemSize <= availableHeight)
+      const heightBasedOnHeight = availableHeight;
 
-    // Use the smaller of the two to ensure it fits
-    const finalSize = Math.min(widthBasedSize, heightBasedSize);
+      // Use the smaller to ensure both width and height fit
+      finalSize = Math.min(heightBasedOnWidth, heightBasedOnHeight);
+    } else {
+      // For normal, itemSize will be the WIDTH, and height = width * goldenRatio
+      // Calculate size based on width constraint (itemSize <= availableWidth)
+      const widthBasedOnWidth = availableWidth;
+
+      // Calculate size based on height constraint (itemSize * goldenRatio <= availableHeight)
+      const widthBasedOnHeight = availableHeight / goldenRatio;
+
+      // Use the smaller to ensure both width and height fit
+      finalSize = Math.min(widthBasedOnWidth, widthBasedOnHeight);
+    }
 
     // Set minimum and maximum bounds
     return Math.max(60, Math.min(240, finalSize));
-  }, [numRows, numCols]);
+  }, [numRows, numCols, sideways]);
 
   const [itemSize, setItemSize] = useState(() => calculateItemSize());
 
@@ -159,6 +174,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
             setChosenIndex={setChosenIndexIfNotChosen}
             percentChosen={choicePercents[index] || 0}
             itemSize={itemSize}
+            sideways={sideways}
           />
         ))}
       </div>
@@ -179,6 +195,7 @@ interface ChooseGameProps {
   numRows: number;
   numCols: number;
   choiceCounts: Record<number, number>;
+  sideways: boolean;
 }
 
 export default ChooseGame;

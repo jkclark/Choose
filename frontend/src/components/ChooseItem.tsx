@@ -7,6 +7,7 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
   setChosenIndex,
   percentChosen,
   itemSize,
+  sideways,
 }) => {
   function handleClick() {
     setChosenIndex(index);
@@ -21,8 +22,8 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
         chosenIndex === index ? "!border-secondary" : "",
       ].join(" ")}
       style={{
-        width: `${itemSize}px`,
-        height: `${itemSize * 1.618}px`, // Golden ratio
+        width: sideways ? `${itemSize * 1.618}px` : `${itemSize}px`,
+        height: sideways ? `${itemSize}px` : `${itemSize * 1.618}px`, // Golden ratio
       }}
       onClick={handleClick}
     >
@@ -57,6 +58,7 @@ interface ChooseItemProps {
   setChosenIndex: (index: number) => void;
   percentChosen: number;
   itemSize: number;
+  sideways: boolean;
 }
 
 export default ChooseItem;
