@@ -201,7 +201,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
       <div className="flex flex-1 items-center justify-center">
         <div
           className={[
-            "text-xl transition-opacity duration-350 ease-in-out sm:text-2xl md:text-3xl",
+            "text-xl transition-opacity duration-350 ease-in-out sm:text-2xl",
             userChose ? "opacity-100" : "opacity-0",
           ].join(" ")}
         >

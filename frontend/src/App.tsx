@@ -52,6 +52,10 @@ function App() {
 
   return (
     <div className="bg-base-100 text-base-content flex h-dvh w-full flex-col items-center justify-center pb-6">
+      <div className="pt-8 text-3xl">
+        <span>Choose one</span>
+      </div>
+
       <div
         className={`flex w-full justify-center transition-opacity duration-300 ease-in-out ${
           isTransitioning ? "opacity-0" : "opacity-100"
