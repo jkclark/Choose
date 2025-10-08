@@ -165,32 +165,38 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   }
 
   return (
-    <div className="flex h-[80dvh] w-full max-w-[800px] flex-col items-center justify-center gap-4 p-4 select-none">
-      <div className="text-xl">Choose one</div>
-      <div
-        className="grid justify-center"
-        style={{
-          gridTemplateRows: `repeat(${numRows}, 1fr)`,
-          gridTemplateColumns: `repeat(${numCols}, auto)`,
-          gap: `${numCols >= 3 ? 6 : 8}px`,
-          maxWidth: "min(100vw - 2rem, 800px)",
-        }}
-      >
-        {Array.from({ length: numRows * numCols }).map((_, index) => (
-          <ChooseItem
-            key={index}
-            index={index}
-            userChose={userChose}
-            chosenIndex={chosenIndex}
-            setChosenIndex={setChosenIndexIfNotChosen}
-            percentChosen={choicePercents[index] || 0}
-            itemSize={itemSize}
-            sideways={isSideways}
-            square={isSquare}
-            numCols={numCols}
-          />
-        ))}
+    <div className="flex h-[80dvh] w-full max-w-[800px] flex-col items-center justify-between gap-4 p-4 select-none">
+      <div></div>
+
+      {/* Centered grid container */}
+      <div className="flex items-center justify-center">
+        <div
+          className="grid justify-center"
+          style={{
+            gridTemplateRows: `repeat(${numRows}, 1fr)`,
+            gridTemplateColumns: `repeat(${numCols}, auto)`,
+            gap: `${numCols >= 3 ? 6 : 8}px`,
+            maxWidth: "min(100vw - 2rem, 800px)",
+          }}
+        >
+          {Array.from({ length: numRows * numCols }).map((_, index) => (
+            <ChooseItem
+              key={index}
+              index={index}
+              userChose={userChose}
+              chosenIndex={chosenIndex}
+              setChosenIndex={setChosenIndexIfNotChosen}
+              percentChosen={choicePercents[index] || 0}
+              itemSize={itemSize}
+              sideways={isSideways}
+              square={isSquare}
+              numCols={numCols}
+            />
+          ))}
+        </div>
       </div>
+
+      {/* Total choices at bottom */}
       <div
         className={[
           "text-lg transition-opacity duration-350 ease-in-out",
