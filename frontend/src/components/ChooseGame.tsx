@@ -165,8 +165,9 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   }
 
   return (
-    <div className="flex h-[80dvh] w-full max-w-[800px] flex-col items-center justify-between gap-4 p-4 select-none">
-      <div></div>
+    <div className="flex h-[80dvh] w-full max-w-[800px] flex-col items-center p-4 select-none">
+      {/* Top spacer */}
+      <div className="flex-1"></div>
 
       {/* Centered grid container */}
       <div className="flex items-center justify-center">
@@ -196,15 +197,20 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
         </div>
       </div>
 
-      {/* Total choices at bottom */}
-      <div
-        className={[
-          "text-lg transition-opacity duration-350 ease-in-out",
-          userChose ? "opacity-100" : "opacity-0",
-        ].join(" ")}
-      >
-        Total choices: <span className="text-secondary">{totalChoices}</span>
+      {/* Middle spacer with total choices centered */}
+      <div className="flex flex-1 items-center justify-center">
+        <div
+          className={[
+            "text-xl transition-opacity duration-350 ease-in-out sm:text-2xl md:text-3xl",
+            userChose ? "opacity-100" : "opacity-0",
+          ].join(" ")}
+        >
+          Total choices: <span className="text-secondary">{totalChoices}</span>
+        </div>
       </div>
+
+      {/* Bottom spacer */}
+      <div className="flex-1"></div>
     </div>
   );
 };
