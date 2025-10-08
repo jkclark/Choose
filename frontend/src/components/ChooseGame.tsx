@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { submitChoice } from "../backend";
 import { type Choice } from "../choices";
+import { Orientation, type Orientation as OrientationType } from "../games";
 import { getChoiceLocally, saveChoiceLocally } from "../localStorage";
 import ChooseItem from "./ChooseItem";
 
@@ -11,12 +12,14 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   numRows,
   numCols,
   choiceCounts,
-  sideways,
+  orientation,
 }) => {
   const [chosenIndex, setChosenIndex] = useState<number>(-1);
   const [didLoadSavedChoice, setDidLoadSavedChoice] = useState(false);
 
   const userChose = chosenIndex !== -1;
+
+  const isSideways = orientation === Orientation.SIDEWAYS;
 
   // State to hold the original counts plus the user's choice
   const [choiceCountsPlusUserChoice, setChoiceCountsPlusUserChoice] = useState<
@@ -46,7 +49,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
     const goldenRatio = 1.618;
 
     let finalSize;
-    if (sideways) {
+    if (isSideways) {
       // For sideways, itemSize will be the HEIGHT, and width = height * goldenRatio
       // Calculate size based on width constraint (itemSize * goldenRatio <= availableWidth)
       const heightBasedOnWidth = availableWidth / goldenRatio;
@@ -70,7 +73,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
 
     // Set minimum and maximum bounds
     return Math.max(60, Math.min(240, finalSize));
-  }, [numRows, numCols, sideways]);
+  }, [numRows, numCols, isSideways]);
 
   const [itemSize, setItemSize] = useState(() => calculateItemSize());
 
@@ -177,7 +180,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
             setChosenIndex={setChosenIndexIfNotChosen}
             percentChosen={choicePercents[index] || 0}
             itemSize={itemSize}
-            sideways={sideways}
+            sideways={isSideways}
             numCols={numCols}
           />
         ))}
@@ -199,7 +202,7 @@ interface ChooseGameProps {
   numRows: number;
   numCols: number;
   choiceCounts: Record<number, number>;
-  sideways: boolean;
+  orientation: OrientationType;
 }
 
 export default ChooseGame;

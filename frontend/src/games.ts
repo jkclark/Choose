@@ -1,8 +1,15 @@
+export const Orientation = {
+  DEFAULT: "default",
+  SIDEWAYS: "sideways",
+} as const;
+
+export type Orientation = (typeof Orientation)[keyof typeof Orientation];
+
 interface Game {
   id: number;
   rows: number;
   cols: number;
-  sideways: boolean;
+  orientation: Orientation;
 }
 
 export const games: Game[] = [
@@ -11,34 +18,34 @@ export const games: Game[] = [
     id: 0,
     rows: 1,
     cols: 2,
-    sideways: false,
+    orientation: Orientation.DEFAULT,
   },
   // Up-down
   {
     id: 1,
     rows: 2,
     cols: 1,
-    sideways: true,
+    orientation: Orientation.SIDEWAYS,
   },
   // Four in a line
   {
     id: 2,
     rows: 1,
     cols: 4,
-    sideways: false,
+    orientation: Orientation.DEFAULT,
   },
   // 2x2
   {
     id: 3,
     rows: 2,
     cols: 2,
-    sideways: false,
+    orientation: Orientation.DEFAULT,
   },
   // 3x3
   {
     id: 4,
     rows: 3,
     cols: 3,
-    sideways: false,
+    orientation: Orientation.DEFAULT,
   },
 ];
