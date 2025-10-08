@@ -39,11 +39,14 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
       {/* Animated background */}
       <div
         className={[
-          "bg-secondary absolute inset-x-0 bottom-0 transition-all duration-1000 ease-out",
+          "bg-secondary absolute transition-all duration-1000 ease-out",
+          sideways ? "inset-y-0 left-0" : "inset-x-0 bottom-0",
           userChose ? "opacity-70" : "opacity-0",
         ].join(" ")}
         style={{
-          height: userChose ? `${percentChosen}%` : "0%",
+          [sideways ? "width" : "height"]: userChose
+            ? `${percentChosen}%`
+            : "0%",
         }}
       />
 
