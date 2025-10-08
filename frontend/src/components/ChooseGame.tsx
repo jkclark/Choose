@@ -20,6 +20,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   const userChose = chosenIndex !== -1;
 
   const isSideways = orientation === Orientation.SIDEWAYS;
+  const isSquare = orientation === Orientation.SQUARE;
 
   // State to hold the original counts plus the user's choice
   const [choiceCountsPlusUserChoice, setChoiceCountsPlusUserChoice] = useState<
@@ -49,7 +50,11 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
     const goldenRatio = 1.618;
 
     let finalSize;
-    if (isSideways) {
+    if (isSquare) {
+      // For square items, itemSize represents both width and height
+      // Use the smaller of available width and height to ensure squares fit
+      finalSize = Math.min(availableWidth, availableHeight);
+    } else if (isSideways) {
       // For sideways, itemSize will be the HEIGHT, and width = height * goldenRatio
       // Calculate size based on width constraint (itemSize * goldenRatio <= availableWidth)
       const heightBasedOnWidth = availableWidth / goldenRatio;
@@ -73,7 +78,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
 
     // Set minimum and maximum bounds
     return Math.max(60, Math.min(240, finalSize));
-  }, [numRows, numCols, isSideways]);
+  }, [numRows, numCols, isSideways, isSquare]);
 
   const [itemSize, setItemSize] = useState(() => calculateItemSize());
 
@@ -181,6 +186,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
             percentChosen={choicePercents[index] || 0}
             itemSize={itemSize}
             sideways={isSideways}
+            square={isSquare}
             numCols={numCols}
           />
         ))}

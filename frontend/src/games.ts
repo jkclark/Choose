@@ -1,6 +1,7 @@
 export const Orientation = {
   DEFAULT: "default",
   SIDEWAYS: "sideways",
+  SQUARE: "square",
 } as const;
 
 export type Orientation = (typeof Orientation)[keyof typeof Orientation];
@@ -39,13 +40,13 @@ export const games: Game[] = [
     id: 3,
     rows: 2,
     cols: 2,
-    orientation: Orientation.DEFAULT,
+    orientation: Orientation.SQUARE,
   },
   // 3x3
   {
     id: 4,
     rows: 3,
     cols: 3,
-    orientation: Orientation.DEFAULT,
+    orientation: Orientation.SQUARE,
   },
 ];

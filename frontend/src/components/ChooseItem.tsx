@@ -8,6 +8,7 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
   percentChosen,
   itemSize,
   sideways,
+  square,
   numCols,
 }) => {
   function handleClick() {
@@ -31,8 +32,16 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
         chosenIndex === index ? "!border-secondary" : "",
       ].join(" ")}
       style={{
-        width: sideways ? `${itemSize * 1.618}px` : `${itemSize}px`,
-        height: sideways ? `${itemSize}px` : `${itemSize * 1.618}px`, // Golden ratio
+        width: square
+          ? `${itemSize}px`
+          : sideways
+            ? `${itemSize * 1.618}px`
+            : `${itemSize}px`,
+        height: square
+          ? `${itemSize}px`
+          : sideways
+            ? `${itemSize}px`
+            : `${itemSize * 1.618}px`,
       }}
       onClick={handleClick}
     >
@@ -40,11 +49,11 @@ const ChooseItem: React.FC<ChooseItemProps> = ({
       <div
         className={[
           "bg-secondary absolute transition-all duration-1000 ease-out",
-          sideways ? "inset-y-0 left-0" : "inset-x-0 bottom-0",
+          sideways && !square ? "inset-y-0 left-0" : "inset-x-0 bottom-0",
           userChose ? "opacity-70" : "opacity-0",
         ].join(" ")}
         style={{
-          [sideways ? "width" : "height"]: userChose
+          [sideways && !square ? "width" : "height"]: userChose
             ? `${percentChosen}%`
             : "0%",
         }}
@@ -72,6 +81,7 @@ interface ChooseItemProps {
   percentChosen: number;
   itemSize: number;
   sideways: boolean;
+  square: boolean;
   numCols: number;
 }
 
