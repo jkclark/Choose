@@ -112,7 +112,10 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
     const storedChoice = getChoiceLocally(gameId);
     if (storedChoice) {
       setDidLoadSavedChoice(true);
-      setChosenIndexIfNotChosen(storedChoice.choice);
+      // Small delay to ensure the component is fully mounted and CSS transitions work
+      setTimeout(() => {
+        setChosenIndexIfNotChosen(storedChoice.choice);
+      }, 50);
     }
   }, [gameId, setChosenIndexIfNotChosen]);
 
