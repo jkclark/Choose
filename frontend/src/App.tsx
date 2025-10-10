@@ -1,31 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { getAllChoices } from "./backend";
-import { type AllChoiceCounts } from "./choices";
+import { getTotalChoices, type AllChoiceCounts } from "./choices";
 import AboutModal from "./components/AboutModal";
 import ChooseGame from "./components/ChooseGame";
+import ThankYouModal, {
+  type ThankYouModalRef,
+} from "./components/ThankYouModal";
 import { games } from "./games";
 
 import "./index.css";
 
 function App() {
   const [gameIndex, setGameIndex] = useState(0);
-  const [allChoiceCounts, setAllChoiceCounts] = useState({} as AllChoiceCounts);
+  const [choiceCountsPerGame, setChoiceCountsPerGame] = useState(
+    {} as AllChoiceCounts,
+  );
+  const thankYouModalRef = useRef<ThankYouModalRef>(null);
 
   // State to manage fade-in/fade-out animation
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const isLastGame = gameIndex === games.length - 1;
+
+  // Callback to handle when user makes a choice
+  const handleChoiceMade = () => {
+    if (isLastGame) {
+      // Show thank you modal after a 2-second delay
+      setTimeout(() => {
+        thankYouModalRef.current?.openModal();
+      }, 1500);
+    }
+  };
 
   // On mount, fetch all choices
   useEffect(() => {
     const fetchAllChoices = async () => {
       const choices = await getAllChoices();
-      setAllChoiceCounts(choices);
+      setChoiceCountsPerGame(choices);
     };
     fetchAllChoices();
   }, []);
 
   function getChoiceCountsForGameIndex(index: number) {
-    return allChoiceCounts ? allChoiceCounts[index] || {} : {};
+    return choiceCountsPerGame ? choiceCountsPerGame[index] || {} : {};
   }
 
   function goToNextGame() {
@@ -50,6 +68,13 @@ function App() {
     }
   }
 
+  function getTotalChoicesForAllGames() {
+    return Object.keys(choiceCountsPerGame).reduce((total, gameId) => {
+      const counts = choiceCountsPerGame[Number(gameId)];
+      return total + (counts ? getTotalChoices(counts) : 0);
+    }, 0);
+  }
+
   return (
     <div className="bg-base-100 text-base-content flex h-dvh w-full flex-col items-center justify-center pb-6">
       <div className="pt-8 text-3xl">
@@ -68,6 +93,7 @@ function App() {
           gameId={games[gameIndex].id}
           choiceCounts={getChoiceCountsForGameIndex(gameIndex)}
           orientation={games[gameIndex].orientation}
+          onChoiceMade={handleChoiceMade}
         />
       </div>
       <div className="flex w-full max-w-[800px] justify-between gap-2 px-10 sm:gap-3 md:gap-4">
@@ -88,6 +114,10 @@ function App() {
       </div>
 
       <AboutModal />
+      <ThankYouModal
+        ref={thankYouModalRef}
+        totalChoices={getTotalChoicesForAllGames()}
+      />
     </div>
   );
 }

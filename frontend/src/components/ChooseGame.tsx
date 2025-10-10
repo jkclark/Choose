@@ -2,7 +2,7 @@ import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 
 import { submitChoice } from "../backend";
-import { type Choice } from "../choices";
+import { getTotalChoices, type Choice } from "../choices";
 import { Orientation, type Orientation as OrientationType } from "../games";
 import { getChoiceLocally, saveChoiceLocally } from "../localStorage";
 import ChooseItem from "./ChooseItem";
@@ -13,6 +13,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   numCols,
   choiceCounts,
   orientation,
+  onChoiceMade,
 }) => {
   const [chosenIndex, setChosenIndex] = useState<number>(-1);
   const [didLoadSavedChoice, setDidLoadSavedChoice] = useState(false);
@@ -105,14 +106,18 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   );
 
   const setChosenIndexIfNotChosen = useCallback(
-    (index: number) => {
+    (index: number, isUserInitiated = true) => {
       if (!userChose) {
         setChosenIndex(index);
-
         addUserChoiceToChoiceCounts(index);
+
+        // Only call the callback for user-initiated choices, not loaded choices
+        if (isUserInitiated) {
+          onChoiceMade?.();
+        }
       }
     },
-    [userChose, addUserChoiceToChoiceCounts],
+    [userChose, addUserChoiceToChoiceCounts, onChoiceMade],
   );
 
   // On mount, check for a saved choice
@@ -122,7 +127,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
       setDidLoadSavedChoice(true);
       // Small delay to ensure the component is fully mounted and CSS transitions work
       setTimeout(() => {
-        setChosenIndexIfNotChosen(storedChoice.choice);
+        setChosenIndexIfNotChosen(storedChoice.choice, false); // false because choice was loaded in
       }, 50);
     }
   }, [gameId, setChosenIndexIfNotChosen]);
@@ -154,14 +159,6 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
     }
 
     return percentages;
-  }
-
-  function getTotalChoices(choices: Record<number, number>) {
-    if (!choices) {
-      return 0;
-    }
-
-    return Object.values(choices).reduce((sum, count) => sum + count, 0);
   }
 
   return (
@@ -224,6 +221,7 @@ interface ChooseGameProps {
   numCols: number;
   choiceCounts: Record<number, number>;
   orientation: OrientationType;
+  onChoiceMade?: () => void;
 }
 
 export default ChooseGame;

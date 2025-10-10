@@ -77,7 +77,7 @@ interface ChooseItemProps {
   index: number;
   userChose: boolean;
   chosenIndex: number;
-  setChosenIndex: (index: number) => void;
+  setChosenIndex: (index: number, isUserInitiated?: boolean) => void;
   percentChosen: number;
   itemSize: number;
   sideways: boolean;
