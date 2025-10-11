@@ -2,7 +2,11 @@ import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 
 import { submitChoice } from "../backend";
-import { getTotalChoices, type Choice } from "../choices";
+import {
+  getMostRecentTallyTime,
+  getTotalChoices,
+  type Choice,
+} from "../choices";
 import { Orientation, type Orientation as OrientationType } from "../games";
 import { getChoiceLocally, saveChoiceLocally } from "../localStorage";
 import ChooseItem from "./ChooseItem";
@@ -127,10 +131,19 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
       setDidLoadSavedChoice(true);
       // Small delay to ensure the component is fully mounted and CSS transitions work
       setTimeout(() => {
-        setChosenIndexIfNotChosen(storedChoice.choice, false); // false because choice was loaded in
+        // Check if the stored choice should be counted based on timing
+        const mostRecentTallyTime = getMostRecentTallyTime();
+        const shouldCountChoice = storedChoice.chosenTime > mostRecentTallyTime;
+
+        setChosenIndex(storedChoice.choice);
+
+        // Only add to choice counts if the choice should be counted
+        if (shouldCountChoice) {
+          addUserChoiceToChoiceCounts(storedChoice.choice);
+        }
       }, 50);
     }
-  }, [gameId, setChosenIndexIfNotChosen]);
+  }, [gameId, addUserChoiceToChoiceCounts]);
 
   // When the user makes a choice, save it locally and submit it to the backend
   useEffect(() => {

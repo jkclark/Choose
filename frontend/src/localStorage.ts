@@ -1,4 +1,5 @@
 import type { Choice } from "./choices";
+import { getMostRecentTallyTime } from "./choices";
 
 const CHOICES_KEY = "choices";
 
@@ -23,10 +24,17 @@ export function getChoiceLocally(gameId: number): Choice | null {
 
 export function getAllUserChoices(): Record<number, number> {
   const choices = getChoicesFromLocalStorage();
+  const mostRecentTallyTime = getMostRecentTallyTime();
+
   // Convert from Choice objects to gameId -> choice mapping
+  // Only include choices made after the most recent backend tally (3am Eastern)
+  // This prevents double-counting choices that have already been aggregated
   const choiceMap: Record<number, number> = {};
   Object.entries(choices).forEach(([gameId, choice]) => {
-    choiceMap[Number(gameId)] = choice.choice;
+    // Only count choices made after the most recent tally to avoid double counting
+    if (choice.chosenTime > mostRecentTallyTime) {
+      choiceMap[Number(gameId)] = choice.choice;
+    }
   });
   return choiceMap;
 }
