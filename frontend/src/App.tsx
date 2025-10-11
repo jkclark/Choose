@@ -8,6 +8,7 @@ import ThankYouModal, {
   type ThankYouModalRef,
 } from "./components/ThankYouModal";
 import { games } from "./games";
+import { getAllUserChoices } from "./localStorage";
 
 import "./index.css";
 
@@ -69,10 +70,22 @@ function App() {
   }
 
   function getTotalChoicesForAllGames() {
-    return Object.keys(choiceCountsPerGame).reduce((total, gameId) => {
-      const counts = choiceCountsPerGame[Number(gameId)];
-      return total + (counts ? getTotalChoices(counts) : 0);
-    }, 0);
+    // Get total from backend (all previous users' choices)
+    const backendTotal = Object.keys(choiceCountsPerGame).reduce(
+      (total, gameId) => {
+        const counts = choiceCountsPerGame[Number(gameId)];
+        return total + (counts ? getTotalChoices(counts) : 0);
+      },
+      0,
+    );
+
+    // Get current user's choices from localStorage
+    const userChoices = getAllUserChoices();
+    const userChoiceCount = Object.keys(userChoices).length;
+
+    // Return combined total - the backend total includes all previously submitted choices,
+    // and we add the current user's new choices that haven't been processed yet
+    return backendTotal + userChoiceCount;
   }
 
   return (
@@ -116,7 +129,7 @@ function App() {
       <AboutModal />
       <ThankYouModal
         ref={thankYouModalRef}
-        totalChoices={getTotalChoicesForAllGames()}
+        getTotalChoices={getTotalChoicesForAllGames}
       />
     </div>
   );

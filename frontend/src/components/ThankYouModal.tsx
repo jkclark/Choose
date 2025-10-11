@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 
 export interface ThankYouModalRef {
   openModal: () => void;
@@ -6,10 +6,13 @@ export interface ThankYouModalRef {
 }
 
 const ThankYouModal = forwardRef<ThankYouModalRef, ThankYouModalProps>(
-  ({ totalChoices }, ref) => {
+  ({ getTotalChoices }, ref) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
+    const [totalChoices, setTotalChoices] = useState(0);
 
     const openModal = () => {
+      // Calculate total choices right when the modal opens to get fresh data
+      setTotalChoices(getTotalChoices());
       dialogRef.current?.showModal();
     };
 
@@ -61,7 +64,7 @@ const ThankYouModal = forwardRef<ThankYouModalRef, ThankYouModalProps>(
 ThankYouModal.displayName = "ThankYou";
 
 interface ThankYouModalProps {
-  totalChoices: number;
+  getTotalChoices: () => number;
 }
 
 export default ThankYouModal;
