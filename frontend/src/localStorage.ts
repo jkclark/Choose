@@ -11,22 +11,27 @@ export function saveChoiceLocally(choice: Choice): void {
     return;
   }
 
-  choices[choice.gameId] = choice.choice;
+  choices[choice.gameId] = choice;
 
   localStorage.setItem(CHOICES_KEY, JSON.stringify(choices));
 }
 
 export function getChoiceLocally(gameId: number): Choice | null {
   const choices = getChoicesFromLocalStorage();
-  const choice = choices[gameId];
-  return choice !== undefined ? { gameId, choice } : null;
+  return choices[gameId] || null;
 }
 
 export function getAllUserChoices(): Record<number, number> {
-  return getChoicesFromLocalStorage();
+  const choices = getChoicesFromLocalStorage();
+  // Convert from Choice objects to gameId -> choice mapping
+  const choiceMap: Record<number, number> = {};
+  Object.entries(choices).forEach(([gameId, choice]) => {
+    choiceMap[Number(gameId)] = choice.choice;
+  });
+  return choiceMap;
 }
 
-function getChoicesFromLocalStorage(): Record<number, number> {
+function getChoicesFromLocalStorage(): Record<number, Choice> {
   const choicesString = localStorage.getItem(CHOICES_KEY);
   if (!choicesString) {
     return {};

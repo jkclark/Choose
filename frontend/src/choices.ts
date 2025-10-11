@@ -1,6 +1,7 @@
 export interface Choice {
   gameId: number;
   choice: number;
+  chosenTime: string; // ISO 8601 timestamp
 }
 
 export interface AllChoiceCounts {

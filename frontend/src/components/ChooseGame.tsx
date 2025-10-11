@@ -138,6 +138,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
       const choice: Choice = {
         gameId: gameId,
         choice: chosenIndex,
+        chosenTime: new Date().toISOString(),
       };
 
       saveChoiceLocally(choice);
