@@ -48,6 +48,8 @@ def lambda_handler(event, context):
 
     choices_as_tuples = convert_choices_from_objects_to_string(choices)
 
+    log_choices(choices)
+
     lambda_request_id = context.aws_request_id  # Unique ID for this Lambda invocation
 
     write_choices_to_s3(S3_BUCKET_NAME, f"{S3_CHOICES_FOLDER_PREFIX}{lambda_request_id}.csv", choices_as_tuples)
@@ -67,6 +69,10 @@ def convert_choices_from_objects_to_string(choices):
     """
     choices_as_strings = [f"{choice['game_id']},{choice['choice']}" for choice in choices]
     return "\n".join(choices_as_strings)
+
+def log_choices(choices):
+    for choice in choices:
+        print(f"Game ID: {choice['game_id']}, Choice: {choice['choice']}")
 
 def write_choices_to_s3(bucket, object_name, choices):
     client = boto3.client("s3")
