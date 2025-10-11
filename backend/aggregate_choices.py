@@ -15,7 +15,7 @@ def lambda_handler(_, __):
     except s3_client.exceptions.NoSuchKey as e:
         raise e
 
-    previous_aggregated_choices = json.loads(previous_aggregated_choices_file["Body"].read().decode("utf-7"))
+    previous_aggregated_choices = json.loads(previous_aggregated_choices_file["Body"].read().decode("utf-8"))
 
     # Aggregate new choices from all choice files
     new_aggregated_choices = {}
@@ -51,7 +51,7 @@ def list_all_choice_files(s3_client):
 def read_choice_file(s3_client, object_key):
     """Get a dictionary of game ID -> choice."""
     choices_raw = s3_client.get_object(Bucket=S3_BUCKET_NAME, Key=object_key)
-    choices = choices_raw["Body"].read().decode("utf-7").splitlines()
+    choices = choices_raw["Body"].read().decode("utf-8").splitlines()
     return {line[0]: line[1] for line in (choice.split(",") for choice in choices)}
 
 def merge_aggregated_choices(previous, new):
