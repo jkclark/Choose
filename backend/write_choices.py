@@ -52,7 +52,14 @@ def lambda_handler(event, context):
 
     lambda_request_id = context.aws_request_id  # Unique ID for this Lambda invocation
 
-    write_choices_to_s3(S3_BUCKET_NAME, f"{S3_CHOICES_FOLDER_PREFIX}{lambda_request_id}.csv", choices_as_tuples)
+    try:
+        write_choices_to_s3(S3_BUCKET_NAME, f"{S3_CHOICES_FOLDER_PREFIX}{lambda_request_id}.csv", choices_as_tuples)
+    except Exception:
+        return {
+            "statusCode": 500,
+            "headers": cors_headers,
+            "body": json.dumps("Error writing choices to S3")
+        }
 
     return {
         "statusCode": 200,
@@ -83,5 +90,7 @@ def write_choices_to_s3(bucket, object_name, choices):
             Body=choices,
             ContentType="text/csv",
         )
+        print(f"Successfully wrote choices to s3://{bucket}/{object_name}")
     except Exception as e:
-        print("Error writing to S3:", e)
+        print(f"Error writing to S3: {e}")
+        raise e
