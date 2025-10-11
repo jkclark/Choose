@@ -142,7 +142,10 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
 
       saveChoiceLocally(choice);
 
-      submitChoice(choice);
+      // Submit to backend
+      submitChoice(choice).catch((error) => {
+        console.error(`Failed to submit choice for game ${gameId}:`, error);
+      });
     }
   }, [userChose, chosenIndex, gameId, didLoadSavedChoice]);
 

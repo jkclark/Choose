@@ -22,6 +22,10 @@ export function getChoiceLocally(gameId: number): Choice | null {
   return choice !== undefined ? { gameId, choice } : null;
 }
 
+export function getAllUserChoices(): Record<number, number> {
+  return getChoicesFromLocalStorage();
+}
+
 function getChoicesFromLocalStorage(): Record<number, number> {
   const choicesString = localStorage.getItem(CHOICES_KEY);
   if (!choicesString) {
