@@ -31,7 +31,7 @@ const ThankYouModal = forwardRef<ThankYouModalRef, ThankYouModalProps>(
             </button>
           </form>
           <h3 className="text-secondary mb-4 text-2xl font-bold md:text-3xl">
-            Thank You!
+            Thank you!
           </h3>
           <p className="text-base-content py-4 text-lg md:text-xl">
             I appreciate you taking the time to choose. Your participation makes
