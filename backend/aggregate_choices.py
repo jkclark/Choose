@@ -28,6 +28,10 @@ def lambda_handler(_, __):
 
             new_aggregated_choices[game_id][choice] = new_aggregated_choices[game_id].get(choice, 0) + 1
 
+            print(f"Parsed choice = {choice} for game ID = {game_id}")
+
+    print(f"Parsed {len(all_choice_files)} choice files containing {sum(len(choices) for choices in new_aggregated_choices.values())} choices")
+
     # Merge previous aggregated choices with the new ones
     total_aggregated_choices = merge_aggregated_choices(previous_aggregated_choices, new_aggregated_choices)
 
