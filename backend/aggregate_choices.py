@@ -35,6 +35,11 @@ def lambda_handler(_, __):
     # Merge previous aggregated choices with the new ones
     total_aggregated_choices = merge_aggregated_choices(previous_aggregated_choices, new_aggregated_choices)
 
+    # Print new total number of choices made
+    summed_choices_per_game = {game_id: sum(choices.values()) for game_id, choices in total_aggregated_choices.items()}
+    sum_of_all_choices = sum(summed_choices_per_game.values())
+    print(f"Total sum of aggregated choices now contains {sum_of_all_choices} choices")
+
     # Delete individual choice files after aggregation
     delete_all_choice_files(s3_client, all_choice_files)
 
