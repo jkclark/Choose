@@ -38,7 +38,7 @@ def lambda_handler(_, __):
     # Print new total number of choices made
     summed_choices_per_game = {game_id: sum(choices.values()) for game_id, choices in total_aggregated_choices.items()}
     sum_of_all_choices = sum(summed_choices_per_game.values())
-    print(f"Total sum of aggregated choices now contains {sum_of_all_choices} choices")
+    print(f"Total number of choices made: {sum_of_all_choices}")
 
     # Delete individual choice files after aggregation
     delete_all_choice_files(s3_client, all_choice_files)
