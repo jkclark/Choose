@@ -8,8 +8,12 @@ import ThankYouModal, {
   type ThankYouModalRef,
 } from "./components/ThankYouModal";
 import { games } from "./games";
-import { getAllUserChoices } from "./localStorage";
+import {
+  getChoicesFromLocalStorage,
+  getNonTalliedUserChoices,
+} from "./localStorage";
 
+import ReadyNotification from "./components/ReadyNotification";
 import "./index.css";
 
 function App() {
@@ -22,10 +26,16 @@ function App() {
   // State to manage fade-in/fade-out animation
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // State to manage ready notification visibility
+  const [showReadyNotification, setShowReadyNotification] = useState(false);
+
   const isLastGame = gameIndex === games.length - 1;
 
   // Callback to handle when user makes a choice
   const handleChoiceMade = () => {
+    // Hide ready notification once user makes any choice
+    setShowReadyNotification(false);
+
     if (isLastGame) {
       // Show thank you modal after a 2-second delay
       setTimeout(() => {
@@ -42,6 +52,22 @@ function App() {
     };
     fetchAllChoices();
   }, []);
+
+  // Handle ready notification timing - show after 5 seconds if no choices made at all
+  useEffect(() => {
+    // Check if user has made ANY choice across all games
+    const userChoices = getChoicesFromLocalStorage();
+    const hasAnyChoice = Object.keys(userChoices).length > 0;
+
+    // Only show notification if no choices exist at all
+    if (!hasAnyChoice) {
+      const timer = setTimeout(() => {
+        setShowReadyNotification(true);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, []); // Empty dependency array - only run once on mount
 
   function getChoiceCountsForGameIndex(index: number) {
     return choiceCountsPerGame ? choiceCountsPerGame[index] || {} : {};
@@ -80,7 +106,7 @@ function App() {
     );
 
     // Get current user's choices from localStorage
-    const userChoices = getAllUserChoices();
+    const userChoices = getNonTalliedUserChoices();
     const userChoiceCount = Object.keys(userChoices).length;
 
     // Return combined total - the backend total includes all previously submitted choices,
@@ -95,7 +121,13 @@ function App() {
       </div>
 
       <div
-        className={`flex w-full justify-center transition-opacity duration-300 ease-in-out ${
+        className={`transition-opacity duration-300 ${showReadyNotification ? "opacity-100" : "opacity-0"}`}
+      >
+        <ReadyNotification />
+      </div>
+
+      <div
+        className={`flex w-full items-center justify-center transition-opacity duration-300 ease-in-out ${
           isTransitioning ? "opacity-0" : "opacity-100"
         }`}
       >

@@ -22,7 +22,7 @@ export function getChoiceLocally(gameId: number): Choice | null {
   return choices[gameId] || null;
 }
 
-export function getAllUserChoices(): Record<number, number> {
+export function getNonTalliedUserChoices(): Record<number, number> {
   const choices = getChoicesFromLocalStorage();
   const mostRecentTallyTime = getMostRecentTallyTime();
 
@@ -39,7 +39,7 @@ export function getAllUserChoices(): Record<number, number> {
   return choiceMap;
 }
 
-function getChoicesFromLocalStorage(): Record<number, Choice> {
+export function getChoicesFromLocalStorage(): Record<number, Choice> {
   const choicesString = localStorage.getItem(CHOICES_KEY);
   if (!choicesString) {
     return {};
@@ -49,7 +49,6 @@ function getChoicesFromLocalStorage(): Record<number, Choice> {
     const choices = JSON.parse(choicesString);
     return choices;
   } catch (e) {
-    console.error("Error parsing choices from localStorage", e);
     return {};
   }
 }
