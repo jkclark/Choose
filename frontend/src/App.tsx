@@ -29,12 +29,26 @@ function App() {
   // State to manage ready notification visibility
   const [showReadyNotification, setShowReadyNotification] = useState(false);
 
+  // State to manage "next" button highlighting
+  const [highlightNextButton, setHighlightNextButton] = useState(false);
+
   const isLastGame = gameIndex === games.length - 1;
 
   // Callback to handle when user makes a choice
   const handleChoiceMade = () => {
     // Hide ready notification once user makes any choice
     setShowReadyNotification(false);
+
+    // Check if this is the user's first choice across all games
+    const userChoices = getNonTalliedUserChoices();
+    const totalChoices = Object.keys(userChoices).length;
+
+    // If this is their first choice, highlight "next" button after short delay
+    if (totalChoices === 0) {
+      setTimeout(() => {
+        setHighlightNextButton(true);
+      }, 2000); // 2 second delay
+    }
 
     if (isLastGame) {
       // Show thank you modal after a 2-second delay
@@ -76,6 +90,9 @@ function App() {
   function goToNextGame() {
     // Go next, or do nothing if we're at the last game
     if (gameIndex < games.length - 1 && !isTransitioning) {
+      // Remove highlight when "next" button is clicked
+      setHighlightNextButton(false);
+
       setIsTransitioning(true);
       setTimeout(() => {
         setGameIndex((prev) => prev + 1);
@@ -141,7 +158,7 @@ function App() {
           onChoiceMade={handleChoiceMade}
         />
       </div>
-      <div className="flex w-full max-w-[800px] justify-between gap-2 px-10 sm:gap-3 md:gap-4">
+      <div className="flex w-full max-w-[800px] justify-between gap-2 px-15 sm:gap-3 md:gap-4">
         <button
           className="btn w-20"
           onClick={goToPrevGame}
@@ -150,7 +167,7 @@ function App() {
           Previous
         </button>
         <button
-          className="btn w-20"
+          className={`btn w-20 ${highlightNextButton ? "border-primary animate-pulse border-2" : ""}`}
           onClick={goToNextGame}
           disabled={gameIndex === games.length - 1}
         >
