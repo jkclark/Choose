@@ -1,14 +1,17 @@
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 
-import { submitChoice } from "../backend";
+import { submitChoice } from "../../../backend";
 import {
   getMostRecentTallyTime,
   getTotalChoices,
   type Choice,
-} from "../choices";
-import { Orientation, type Orientation as OrientationType } from "../games";
-import { getChoiceLocally, saveChoiceLocally } from "../localStorage";
+} from "../../../choices";
+import {
+  Orientation,
+  type Orientation as OrientationType,
+} from "../../../games";
+import { getChoiceLocally, saveChoiceLocally } from "../../../localStorage";
 import ChooseItem from "./ChooseItem";
 
 const ChooseGame: React.FC<ChooseGameProps> = ({
@@ -40,7 +43,10 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   const calculateItemSize = useCallback(() => {
     // Base container width (accounting for padding and gaps)
     const maxContainerWidth = Math.min(window.innerWidth - 32, 800); // 2rem padding
-    const maxContainerHeight = window.innerHeight * 0.8 * 0.7; // 80dvh * 70% for items
+
+    // Account for navbar height (DaisyUI navbar is typically ~64px)
+    const navbarHeight = 64;
+    const maxContainerHeight = (window.innerHeight - navbarHeight) * 0.8 * 0.7; // Subtract navbar, then 80dvh * 70% for items
 
     // Account for gaps between items
     const gapSize = numCols >= 3 ? 6 : 8; // Responsive gap
@@ -179,7 +185,7 @@ const ChooseGame: React.FC<ChooseGameProps> = ({
   }
 
   return (
-    <div className="flex h-[80dvh] w-full max-w-[800px] flex-col items-center p-4 select-none">
+    <div className="flex h-[80%] w-full max-w-[800px] flex-col items-center p-4 select-none">
       {/* Top spacer */}
       <div className="flex-1"></div>
 
