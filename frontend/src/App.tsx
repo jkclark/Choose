@@ -13,6 +13,7 @@ import {
   getNonTalliedUserChoices,
 } from "./localStorage";
 
+import ProgressCircle from "./components/ProgressCircle";
 import ReadyNotification from "./components/ReadyNotification";
 import "./index.css";
 
@@ -34,8 +35,16 @@ function App() {
 
   const isLastGame = gameIndex === games.length - 1;
 
+  // Keep track of the number of choices made by the current user
+  const [localChoiceCount, setLocalChoiceCount] = useState(
+    Object.keys(getChoicesFromLocalStorage()).length,
+  );
+
   // Callback to handle when user makes a choice
   const handleChoiceMade = () => {
+    // Update local choice count for progress wheel
+    setLocalChoiceCount((prev) => prev + 1);
+
     // Hide ready notification once user makes any choice
     setShowReadyNotification(false);
 
@@ -123,12 +132,14 @@ function App() {
     );
 
     // Get current user's choices from localStorage
-    const userChoices = getNonTalliedUserChoices();
-    const userChoiceCount = Object.keys(userChoices).length;
+    const nonAggregatedUserChoices = getNonTalliedUserChoices();
+    const nonAggregatedUserChoiceCount = Object.keys(
+      nonAggregatedUserChoices,
+    ).length;
 
     // Return combined total - the backend total includes all previously submitted choices,
     // and we add the current user's new choices that haven't been processed yet
-    return backendTotal + userChoiceCount;
+    return backendTotal + nonAggregatedUserChoiceCount;
   }
 
   return (
@@ -158,7 +169,7 @@ function App() {
           onChoiceMade={handleChoiceMade}
         />
       </div>
-      <div className="flex w-full max-w-[800px] justify-between gap-2 px-15 sm:gap-3 md:gap-4">
+      <div className="flex w-full max-w-[800px] items-center justify-between gap-2 px-15 sm:gap-3 md:gap-4">
         <button
           className="btn w-20"
           onClick={goToPrevGame}
@@ -166,6 +177,7 @@ function App() {
         >
           Previous
         </button>
+        <ProgressCircle votes={localChoiceCount} totalGames={games.length} />
         <button
           className={`btn w-20 ${highlightNextButton ? "border-primary animate-pulse border-2" : ""}`}
           onClick={goToNextGame}
